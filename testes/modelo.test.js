@@ -23,3 +23,32 @@ test('Testando cadastro de três perguntas', () => {
   expect(perguntas[2].num_respostas).toBe(0);
   expect(perguntas[1].id_pergunta).toBe(perguntas[2].id_pergunta-1);
 });
+
+test('Testando busca de perguntas', () => {
+  modelo.cadastrar_pergunta('1 + 1 = ?');
+  modelo.cadastrar_pergunta('2 + 2 = ?');
+  const perguntas = modelo.listar_perguntas();
+  const pergunta1 = modelo.get_pergunta(perguntas[0].id_pergunta);
+  expect(pergunta1.texto).toBe('1 + 1 = ?');
+  const pergunta2 = modelo.get_pergunta(perguntas[1].id_pergunta);
+  expect(pergunta2.texto).toBe('2 + 2 = ?');
+});
+
+test('Testando cadastro de respostas', () => {
+  modelo.cadastrar_pergunta('1 + 1 = ?');
+  modelo.cadastrar_pergunta('2 + 2 = ?');
+  const perguntas = modelo.listar_perguntas();
+  modelo.cadastrar_resposta(perguntas[0].id_pergunta, '2');
+  modelo.cadastrar_resposta(perguntas[1].id_pergunta, '4');
+  expect(modelo.get_respostas(perguntas[0].id_pergunta)[0].texto).toBe('2');
+  expect(modelo.get_respostas(perguntas[1].id_pergunta)[0].texto).toBe('4');
+});
+
+test('Testando busca de numero de respostas', () => {
+  modelo.cadastrar_pergunta('1 + 1 = ?');
+  modelo.cadastrar_pergunta('2 + 2 = ?');
+  const perguntas = modelo.listar_perguntas();
+  modelo.cadastrar_resposta(perguntas[0].id_pergunta, '2');
+  modelo.cadastrar_resposta(perguntas[0].id_pergunta, '3');
+  expect(modelo.get_num_respostas(perguntas[0].id_pergunta)).toBe(2);
+});
